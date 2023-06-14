@@ -12,21 +12,3 @@ openssl x509 -req -sha256 -days 3650 -in root.csr -signkey root.key -outform PEM
 openssl ecparam -genkey -name prime256v1 | openssl ec -out issuer.key
 openssl req -new -sha256 -key issuer.key -out issuer.csr -config issuer.conf -extensions v3_req
 openssl x509 -req -in issuer.csr -CA root.pem -CAkey root.key -CAcreateserial -outform PEM -out issuer.pem -days 3650 -sha256 -extfile issuer.conf -extensions v3_req
-
-cat <<EOF > /tmp/output/dapr-trust-bundle-static
-apiVersion: v1
-kind: Secret
-metadata:
-  name: dapr-trust-bundle-static
-  labels:
-    app: dapr-sentry
-data:
-  issuer.crt: $(base64 -i issuer.pem -w 0)
-  issuer.key: $(base64 -i issuer.key -w 0)
-  ca.crt: $(base64 -i root.pem -w 0)
-EOF
-
-rm /tmp/certs/*.key
-rm /tmp/certs/*.pem
-rm /tmp/certs/*.csr
-rm /tmp/certs/*.srl
