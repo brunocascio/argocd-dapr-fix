@@ -1,13 +1,13 @@
 namespace: dapr-system
 
 helmCharts:
-  - repo: https://dapr.github.io/helm-charts/
-    name: dapr
-    namespace: dapr-system
-    includeCRDs: true
-    releaseName: dapr
-    version: 1.11.0
-    valuesFile: values.yml
+- includeCRDs: true
+  name: dapr
+  namespace: dapr-system
+  releaseName: dapr
+  repo: https://dapr.github.io/helm-charts/
+  valuesFile: values.yml
+  version: 1.11.0
   # - repo: https://dapr.github.io/helm-charts/
   #   name: dapr-dashboard
   #   namespace: dapr-system
@@ -19,20 +19,16 @@ patches:
   # remove all the secrets creation handled by dapr
   - target:
       kind: Secret
-      name: 'dapr-trust-bundle'
+      name: dapr-trust-bundle
       namespace: dapr-system
-    patch: |-
-      - op: remove
-        path: /metadata
-      - op: remove
-        path: /data
+    path: delete-secrets.yml
   # this is needed because kubernetes 1.20.x
-  - target:
-      group: policy
-      version: v1
-      kind: PodDisruptionBudget
-      name: '.*'
-    patch: |-
+  - patch: |-
       - op: replace
         path: "/apiVersion"
         value: policy/v1beta1
+    target:
+      group: policy
+      kind: PodDisruptionBudget
+      name: .*
+      version: v1
