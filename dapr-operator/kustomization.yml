@@ -18,10 +18,16 @@ helmCharts:
 patches:
   # remove all the secrets creation handled by dapr
   - target:
+      group: ''
+      version: v1
       kind: Secret
       name: dapr-trust-bundle
-      namespace: dapr-system
-    path: delete-secrets.yml
+    patch: |-
+      - op: replace
+        path: /metadata/name
+        value: nonused-dapr-trust-bundle
+      - op: remove
+        path: /metadata/labels/app
   # this is needed because kubernetes 1.20.x
   - patch: |-
       - op: replace
