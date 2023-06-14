@@ -29,12 +29,12 @@ patches:
       - op: remove
         path: /metadata/labels/app
   # this is needed because kubernetes 1.20.x
-  - patch: |-
-      - op: replace
-        path: "/apiVersion"
-        value: policy/v1beta1
-    target:
-      group: policy
-      kind: PodDisruptionBudget
-      name: .*
-      version: v1
+  # - patch: |-
+  #     - op: replace
+  #       path: "/apiVersion"
+  #       value: policy/v1beta1
+  #   target:
+  #     group: policy
+  #     kind: PodDisruptionBudget
+  #     name: .*
+  #     version: v1
