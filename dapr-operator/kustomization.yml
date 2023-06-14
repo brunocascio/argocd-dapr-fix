@@ -1,3 +1,6 @@
+resources:
+  - namespace.yml
+
 namespace: dapr-system
 
 helmCharts:
@@ -15,19 +18,64 @@ helmCharts:
   #   version: 0.13.0
   #   valuesFile: values.dashboard.yml
 
-patches:
-  # remove all the secrets creation handled by dapr
-  - target:
-      group: ''
-      version: v1
-      kind: Secret
-      name: dapr-trust-bundle
-    patch: |-
-      - op: replace
-        path: /metadata/name
-        value: nonused-dapr-trust-bundle
-      - op: remove
-        path: /metadata/labels/app
+# patches:
+#   # ue different certificate volumes
+#   - target:
+#       kind: Deployment
+#       name: dapr-operator
+#     patch: |
+#       kind: Deployment
+#       metadata:
+#         name: dapr-operator
+#       spec:
+#         template:
+#           spec:
+#             volumes:
+#               - name: credentials
+#                 secret:
+#                   secretName: dapr-trust-bundle-static
+#   - target:
+#       kind: Deployment
+#       name: dapr-sentry
+#     patch: |
+#       kind: Deployment
+#       metadata:
+#         name: dapr-sentry
+#       spec:
+#         template:
+#           spec:
+#             volumes:
+#               - name: credentials
+#                 secret:
+#                   secretName: dapr-trust-bundle-static
+#   - target:
+#       kind: StatefulSet
+#       name: dapr-placement-server
+#     patch: |
+#       kind: StatefulSet
+#       metadata:
+#         name: dapr-placement-server
+#       spec:
+#         template:
+#           spec:
+#             volumes:
+#               - name: credentials
+#                 secret:
+#                   secretName: dapr-trust-bundle-static
+
+# patches:
+#   # remove all the secrets creation handled by dapr
+#   - target:
+#       group: ''
+#       version: v1
+#       kind: Secret
+#       name: dapr-trust-bundle
+#     patch: |-
+#       - op: replace
+#         path: /metadata/name
+#         value: nonused-dapr-trust-bundle
+#       - op: remove
+#         path: /metadata/labels/app
   # this is needed because kubernetes 1.20.x
   # - patch: |-
   #     - op: replace

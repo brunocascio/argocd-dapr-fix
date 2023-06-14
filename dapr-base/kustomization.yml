@@ -1,5 +1,0 @@
-resources:
-  - namespace.yml
-  - secrets/output/dapr-trust-bundle.yml
-
-namespace: dapr-system
